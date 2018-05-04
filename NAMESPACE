@@ -2,8 +2,7 @@
 
 export(aovperm)
 export(clusterlm)
-importClassesFrom(Matrix,dgCMatrix)
-importClassesFrom(Matrix,dgeMatrix)
+importClassesFrom(Matrix,Matrix)
 importFrom(Matrix,Matrix)
 importFrom(Matrix,bdiag)
 importFrom(permuco,Pmat)
