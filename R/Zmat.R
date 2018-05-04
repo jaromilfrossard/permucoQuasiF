@@ -1,4 +1,3 @@
-#' @importFrom Matrix Matrix bdiag
 Zmat = function(mm0, mm, link, mm_id1, mm_id2, mm0_id1, mm0_id2, terms_f){
 
 

@@ -1,5 +1,3 @@
-#' @importClassesFrom Matrix Matrix
-#' @importMethodsFrom Matrix colMeans colSums
 cluster_quasif_terBraak_logp = function(args){
   link = args$link
   mm = args$mm

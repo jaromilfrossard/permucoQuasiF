@@ -15,6 +15,7 @@
 #' @details
 #' Similar to the \code{permuco} package.
 #'@author jaromil.frossard@unige.ch
+#'@import Matrix
 #'@export
 clusterlm <- function(formula, data=NULL, np = 5000, method = NULL, test = "fisher", threshold = NULL, aggr_FUN = NULL,
                       multcomp = "clustermass", ...){
