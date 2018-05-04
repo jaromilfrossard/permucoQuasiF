@@ -1,28 +1,22 @@
-#' @importFrom  stats contrasts contrasts<- model.response delete.response model.matrix as.formula update
-#' @importFrom permuco Pmat
-aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotation, new_method = NULL) {
-  if (is.null(coding_sum)) {
-    coding_sum = T
-  }
-  if (is.null(new_method)) {
-    new_method = F
-  }
+clusterlm_quasif = function (formula, data, method, test, threshold, np,
+                             P, S, rnd_rotation, aggr_FUN, E, H, cl, multcomp, alpha, p_scale,
+                             return_distribution, ndh, coding_sum, new_method) {
   if (is.null(method)) {
     method = "terBraak"
   }
-  if (!new_method) {
-    method = match.arg(method, c("terBraak",
-                                 "terBraak_logp"))
-  }
-
 
   switch(method,
-         terBraak_logp ={funP = function(...){quasif_terBraak_logp(...)}},
-         terBraak ={funP = function(...){quasif_terBraak(...)}},{
+         terBraak ={funP = function(...){cluster_quasif_terBraak(...)}},
+         terBraak_logp ={funP = function(...){cluster_quasif_terBraak_logp(...)}},{
            warning(paste("the method", method, "is not defined."))
-           funP <- function(...) {
-             eval(parse(text = paste("quasif_", method, "(...)",
+           funP = function(...) {
+             eval(parse(text = paste("cluster_quasif_", method, "(...)",
                                      sep = "", collpase = "")))}})
+
+
+  if (!(class(formula[[2]]) == "matrix")) {
+    formula[[2]] <- call("as.matrix", formula[[2]])
+  }
 
   terms <- terms(formula, special = "Error", data = data)
   ind_error <- attr(terms, "specials")$Error
@@ -51,29 +45,35 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
                                collapse = ""))
 
 
-  #formulas <<- list(id1 = formula_id1, id2 = formula_id2, fe = formula_f,within1 = formula_within1,within2 =formula_within2)
+  ####withour reponse
+  formula_allfixed_design = delete.response(terms(update(formula_allfixed, ~.)))
+  formula_f_design = delete.response(terms(update(formula_f, ~.)))
+
 
 
   ####model.frame
   mf <- model.frame(formula = formula_allfixed, data = data)
+  mf_design <- model.frame(formula = formula_allfixed_design, data = data)
   if (coding_sum) {
-    mf <- permuco:::changeContrast(mf, contr = contr.sum)
+    mf_design <- permuco:::changeContrast(mf_design, contr = "contr.sum")
   }
-  mf_f <- model.frame(formula = formula_f, data = mf)
-  mf_id1 <- model.frame(formula = formula_id1, data = as.data.frame(lapply(mf,
+
+  mf_f <- model.frame(formula = formula_f_design, data = mf_design)
+
+
+  mf_id1 <- model.frame(formula = formula_id1, data = as.data.frame(lapply(mf_design,
                                                                            function(col) {
                                                                              col = as.factor(col)
                                                                              contrasts(col) = contr.sum
                                                                              col
                                                                            })))
-  mf_id2 <- model.frame(formula = formula_id2, data = as.data.frame(lapply(mf,
+  mf_id2 <- model.frame(formula = formula_id2, data = as.data.frame(lapply(mf_design,
                                                                            function(col) {
                                                                              col = as.factor(col)
                                                                              contrasts(col) = contr.sum
                                                                              col
                                                                            })))
   y <- model.response(mf)
-
   ###link
   link = link(formula_f = formula_f, formula_within1 = formula_within1,formula_within2 = formula_within2)
 
@@ -100,76 +100,81 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
 
   }
 
-  mm0 = model.matrix(formula_f,mf0)
+  mm0 = model.matrix(formula_f_design,mf0)
   mm0_id1 = model.matrix(formula_id1,mf0)[,-1]
   mm0_id2 = model.matrix(formula_id2,mf0)[,-1]
 
 
   name <- colnames(mm_f)
-  permuco:::checkBalancedData(fixed_formula = formula_f, data = cbind(y,
-                                                                      mf))
+  permuco:::checkBalancedData(fixed_formula = formula_f_design, data = mf)
 
   tf = delete.response(terms(update(formula_f, ~.)))
+
 
   zm = Zmat(mm0 = mm0, mm = mm_f, link = link,mm_id1 = mm_id1, mm_id2 = mm_id2,
             mm0_id1= mm0_id1, mm0_id2= mm0_id2, terms_f= tf)
 
 
+  if (is.null(P)) {
+    P = Pmat(np = np, n = ncol(mm_f))
+  }
+
   if (is.null(S)) {
     S = Pmat(np = np, n = ncol(zm$z0),type = "coinflip")
   }
+
   np = permuco:::np.Pmat(S)
 
-  pry = as.numeric(zm$coding%*%(qr.coef(zm$qr_xz,y)[-c(1:ncol(mm_f))]))*S
-  pry = zm$z0%*%Matrix(as.matrix(pry))
+  gamma = zm$coding%*%((qr.coef(zm$qr_xz,y)[-c(1:ncol(mm_f)),]))
+
   args <- list(y = y, mm = mm_f, mm_id1 = mm_id1, mm_id2 = mm_id2, link = link,
-               S = S, zm = zm, pry = pry)
-  #arg<<-args
+               P = P, S = S, zm = zm, gamma = gamma)
 
 
+  multiple_comparison <- list()
+  length(multiple_comparison) <- max(attr(mm_f, "assign"))
+  names(multiple_comparison) <- attr(attr(mf_f, "terms"), "term.labels")
 
-  # args <- list(y = y, mm = mm_f, mm_id1 = mm_id1, mm_id2 = mm_id2, link = link,
-  #              P = P,mm0 = mm0, mm0_id1 = mm0_id1, mm0_id2 = mm0_id2,terms_f = tf)
-  # ag <<- args
-
-
-  distribution <- sapply(1:max(attr(mm_f, "assign")), function(i) {
+  for (i in 1:max(attr(mm_f, "assign"))) {
     args$i = i
-    funP(args = args)
-  })
-  distribution = matrix(distribution,nrow=np)
-  colnames(distribution) = attr(attr(mf_f, "terms"), "term.labels")
-  permuco:::check_distribution(distribution = distribution, digits = 10,
-                               n_unique = 300)
-  table = anova_table_quasif(args)
+    distribution = funP(args = args)
 
-  rownames(table) = attr(attr(mf_f, "terms"), "term.labels")
-  permutation_pvalue = apply(distribution, 2, function(d) {
-    permuco:::compute_pvalue(distribution = d, laterality = "bilateral",
-                             na.rm = T)
-  })
-  table$"permutation P(>F)" = permutation_pvalue
+    pvalue <- apply(distribution, 2, function(col) permuco:::compute_pvalue(distribution = col))
+    multiple_comparison[[i]]$uncorrected = list(main = cbind(statistic = distribution[1,],
+                                                             pvalue = pvalue))
+    if (return_distribution){
+      multiple_comparison[[i]]$uncorrected$distribution = distribution
+    }
 
-  attr(table, "type") <- paste("Permutation test using", method,
-                               "to handle noise variable and", np, "permutations.")
+    multiple_comparison[[i]] = c(multiple_comparison[[i]],
+                                 permuco:::switch_multcomp(multcomp = c("clustermass",multcomp),
+                                                           distribution = distribution, threshold = threshold,
+                                                           aggr_FUN = aggr_FUN, laterality = "bilateral",
+                                                           E = E, H = H, ndh = ndh, pvalue = pvalue, alpha = alpha))
+  }
 
+  cluster_table <- permuco:::cluster_table(multiple_comparison)
+  cluster_table = cluster_table[order(link[3, ], link[1, ])]
+  multiple_comparison = multiple_comparison[order(link[3, ],
+                                                  link[1, ])]
+  attr(cluster_table, "type") <- paste("Permutation test using ",
+                                       method, " to handle noise variable and ", np, " permutations.")
   out = list()
   out$y = y
-  out$pry = pry
-  out$zm =zm
   out$model.matrix = mm_f
   out$model.matrix_id1 = mm_id1
   out$model.matrix_id2 = mm_id2
   out$link = link
   out$P = P
   out$S = S
-  out$np = np
-  out$table = table
-  out$distribution = distribution
+  out$cluster_table = cluster_table
+  out$multiple_comparison = multiple_comparison
   out$data = mf
   out$method = method
-  class(out) <- "lmperm"
+  out$alpha = alpha
+  out$multcomp = multcomp
+  out$threshold = threshold
+  out$test = test
+  class(out) <- "clusterlm"
   return(out)
-
-
 }

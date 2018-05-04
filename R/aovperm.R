@@ -5,12 +5,13 @@
 #' \code{+ Error(id/(A*C)) + Error(id/(B*C))} to specify random effect associate to subjects and items, where \code{A} is a within \code{id} factor, \code{B} is a within \code{item} factor and \code{C} is within \code{id} and \code{item} factors.
 #' @param data similar to the \code{permuco} package.
 #' @param np similar to the \code{permuco} package. Default value is \code{5000}.
-#' @param method similar to the \code{permuco} package. The method is set to \code{"terBraak"} and for the quasi-F statistic.
+#' @param method similar to the \code{permuco} package. The method is set to \code{"terBraak"} and \code{"terBraak_logp"} are available for the quasi-F statistic.
 #' @param ... Futher arguments, see details.
 #'
 #' @return A \code{lmperm} object containing most of the objects given in an \link{lm} object, an ANOVA table with parametric and permutation p-values, the test statistics and the permutation distributions.
 #'
-#' @details similar to the \code{permuco} package.
+#' @details
+#' Similar to the \code{permuco} package.
 #' @author jaromil.frossard@unige.ch
 #' @importFrom stats terms contr.sum model.frame terms
 #' @export

@@ -6,6 +6,7 @@
 #'@param formual_id the formula indicating the random effect
 #'
 #'@return a matrix with its contrasts as attributs.
+#'@importFrom stats formula update.formula
 mm_z = function(model_frame, formula_f, formula_within, formula_id){
   tf = terms(formula_f)
   tw = terms(formula_within)

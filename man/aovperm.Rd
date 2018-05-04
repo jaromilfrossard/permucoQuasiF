@@ -14,7 +14,7 @@ aovperm(formula, data = NULL, np = 5000, method = NULL, ...)
 
 \item{np}{similar to the \code{permuco} package. Default value is \code{5000}.}
 
-\item{method}{similar to the \code{permuco} package. The method is set to \code{"terBraak"} and for the quasi-F statistic.}
+\item{method}{similar to the \code{permuco} package. The method is set to \code{"terBraak"} and \code{"terBraak_logp"} are available for the quasi-F statistic.}
 
 \item{...}{Futher arguments, see details.}
 }
@@ -25,7 +25,7 @@ A \code{lmperm} object containing most of the objects given in an \link{lm} obje
 Provides p-values for omnibus tests based on permutations for quasi-F statistics
 }
 \details{
-similar to the \code{permuco} package.
+Similar to the \code{permuco} package.
 }
 \author{
 jaromil.frossard@unige.ch
