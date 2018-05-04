@@ -1,3 +1,4 @@
+#'@importFrom stats pf
 quasif_terBraak_logp = function(args){
   link = args$link
   mm = args$mm
@@ -31,6 +32,8 @@ quasif_terBraak_logp = function(args){
   #print(sry[,1]+mm%*%(qr.coef(qr_xz,args$y)[1:ncol(mm)])-args$y)
 
   py = as.matrix(args$pry) + qr.fitted(qr_d,args$y)
+
+  print(class(qr.fitted(qr_x, py)^2))
   num1 = colSums(qr.fitted(qr_x, py)^2)/qr_x$rank
   num2 = colSums(qr.fitted(qr_z12, py)^2)/qr_z12$rank
   den1 = colSums(qr.fitted(qr_z1, py)^2)/qr_z1$rank

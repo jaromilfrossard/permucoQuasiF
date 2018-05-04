@@ -1,3 +1,4 @@
+#' @importMethodsFrom Matrix colMeans
 cluster_quasif_terBraak_logp = function(args){
   link = args$link
   mm = args$mm
