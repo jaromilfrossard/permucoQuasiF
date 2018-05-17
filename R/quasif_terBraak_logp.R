@@ -33,7 +33,8 @@ quasif_terBraak_logp = function(args){
 
   py = as.matrix(args$pry) + qr.fitted(qr_d,args$y)
 
-  print(class(qr.fitted(qr_x, py)^2))
+  #print(class(qr.fitted(qr_x, py)^2))
+
   num1 = colSums(qr.fitted(qr_x, py)^2)/qr_x$rank
   num2 = colSums(qr.fitted(qr_z12, py)^2)/qr_z12$rank
   den1 = colSums(qr.fitted(qr_z1, py)^2)/qr_z1$rank

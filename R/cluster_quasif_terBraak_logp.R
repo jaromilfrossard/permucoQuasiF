@@ -1,3 +1,4 @@
+
 cluster_quasif_terBraak_logp = function(args){
   link = args$link
   mm = args$mm
@@ -33,7 +34,10 @@ cluster_quasif_terBraak_logp = function(args){
   qr_z2M = qr(Matrix(z2[,qr_z2$pivot[1:qr_z2$rank]],sparse = T))
   qr_z12M = qr(Matrix(z12[,qr_z12$pivot[1:qr_z12$rank]],sparse = T))
 
+
+
   hdy = qr.fitted(qr_d,args$y)
+
 
 
   qf = t(apply(as.matrix(args$S),2,function(pii){
@@ -49,10 +53,10 @@ cluster_quasif_terBraak_logp = function(args){
 
 
 
-  num1 = colSums(qr.fitted(qr_xM, args$y)^2)/qr_x$rank
-  num2 = colSums(qr.fitted(qr_z12M, args$y)^2)/qr_z12$rank
-  den1 = colSums(qr.fitted(qr_z1M, args$y)^2)/qr_z1$rank
-  den2 = colSums(qr.fitted(qr_z2M, args$y)^2)/qr_z2$rank
+  num1 = Matrix::colSums(qr.fitted(qr_xM, args$y)^2)/qr_x$rank
+  num2 = Matrix::colSums(qr.fitted(qr_z12M, args$y)^2)/qr_z12$rank
+  den1 = Matrix::colSums(qr.fitted(qr_z1M, args$y)^2)/qr_z1$rank
+  den2 = Matrix::colSums(qr.fitted(qr_z2M, args$y)^2)/qr_z2$rank
 
   dfn = (num1+num2)^2/(num1^2/qr_x$rank+num2^2/qr_z12$rank)
   dfd = (den1+den2)^2/(den1^2/qr_z1$rank+den2^2/qr_z2$rank)

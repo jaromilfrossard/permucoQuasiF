@@ -1,9 +1,11 @@
-#'@description compute the z matrice for random effect within between effect
+#' Create the Z matrices based with sum contrasts
+#'
+#'@description Compute the z matrice for the random effects and reduced its rank and dimension with respect to the between effects.
 #'
 #'@param model_frame a model.frame object containint the facotors of interest
 #'@param formula_f a formula of all the effects as fixed
 #'@param formula_within a formula indicating the within effect
-#'@param formual_id the formula indicating the random effect
+#'@param formual_id the formula indicating the sampling units
 #'
 #'@return a matrix with its contrasts as attributs.
 #'@importFrom stats formula update.formula
