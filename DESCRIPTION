@@ -6,7 +6,9 @@ Date: 2018-03-05
 Authors@R: c(person("Jaromil","Frossard", email = "jaromil.frossard@unige.ch",role = c("aut", "cre")),person("Olivier","Renaud",email="olivier.renaud@unige.ch",role=c("aut")))
 Description: Add on to the permuco package to compute quasi-F statstics in model where subjects and items are randomly sampled.
 License: GPL (>= 2)
-Imports: permuco,Matrix,stats
+Imports: permuco,Matrix,stats,utils
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
+Suggests: knitr,rmarkdown

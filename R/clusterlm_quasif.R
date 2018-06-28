@@ -5,8 +5,15 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
     method = "terBraak"
   }
 
+  if (is.null(aggr_FUN)) {
+    fun_name = "the sum"
+    aggr_FUN = function(x) sum(x)
+    } else {
+    fun_name = "a user-defined function"
+  }
+
+
   switch(method,
-         terBraak ={funP = function(...){cluster_quasif_terBraak(...)}},
          terBraak_logp ={funP = function(...){cluster_quasif_terBraak_logp(...)}},{
            warning(paste("the method", method, "is not defined."))
            funP = function(...) {
@@ -152,18 +159,20 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
                                                            aggr_FUN = aggr_FUN, laterality = "bilateral",
                                                            E = E, H = H, ndh = ndh, pvalue = pvalue, alpha = alpha))
   }
-
-  cluster_table <- permuco:::cluster_table(multiple_comparison)
-  cluster_table = cluster_table[order(link[3, ], link[1, ])]
   multiple_comparison = multiple_comparison[order(link[3, ],
                                                   link[1, ])]
+  cluster_table <- permuco:::cluster_table(multiple_comparison)
+
   attr(cluster_table, "type") <- paste("Permutation test using ",
                                        method, " to handle noise variable and ", np, " permutations.")
+
+
   out = list()
   out$y = y
   out$model.matrix = mm_f
   out$model.matrix_id1 = mm_id1
   out$model.matrix_id2 = mm_id2
+  out$zm = zm
   out$link = link
   out$P = P
   out$S = S
@@ -175,6 +184,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
   out$multcomp = multcomp
   out$threshold = threshold
   out$test = test
+  out$fun_name <- fun_name
   class(out) <- "clusterlm"
   return(out)
 }

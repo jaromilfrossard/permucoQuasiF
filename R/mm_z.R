@@ -5,7 +5,7 @@
 #'@param model_frame a model.frame object containint the facotors of interest
 #'@param formula_f a formula of all the effects as fixed
 #'@param formula_within a formula indicating the within effect
-#'@param formual_id the formula indicating the sampling units
+#'@param formula_id the formula indicating the sampling units
 #'
 #'@return a matrix with its contrasts as attributs.
 #'@importFrom stats formula update.formula

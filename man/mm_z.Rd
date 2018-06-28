@@ -13,7 +13,7 @@ mm_z(model_frame, formula_f, formula_within, formula_id)
 
 \item{formula_within}{a formula indicating the within effect}
 
-\item{formual_id}{the formula indicating the sampling units}
+\item{formula_id}{the formula indicating the sampling units}
 }
 \value{
 a matrix with its contrasts as attributs.
