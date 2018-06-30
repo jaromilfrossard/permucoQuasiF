@@ -1,6 +1,6 @@
 clusterlm_quasif = function (formula, data, method, test, threshold, np,
                              P, S, rnd_rotation, aggr_FUN, E, H, cl, multcomp, alpha, p_scale,
-                             return_distribution, ndh, coding_sum, new_method) {
+                             return_distribution, ndh, coding_sum, new_method, effect) {
   if (is.null(method)) {
     method = "terBraak"
   }
@@ -142,7 +142,11 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
   length(multiple_comparison) <- max(attr(mm_f, "assign"))
   names(multiple_comparison) <- attr(attr(mf_f, "terms"), "term.labels")
 
-  for (i in 1:max(attr(mm_f, "assign"))) {
+  if(is.null(effect)){
+    effect = 1:max(attr(mm_f, "assign"))
+  }
+
+  for (i in effect) {
     args$i = i
     distribution = funP(args = args)
 
@@ -159,8 +163,9 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
                                                            aggr_FUN = aggr_FUN, laterality = "bilateral",
                                                            E = E, H = H, ndh = ndh, pvalue = pvalue, alpha = alpha))
   }
-  multiple_comparison = multiple_comparison[order(link[3, ],
-                                                  link[1, ])]
+
+  multiple_comparison = multiple_comparison[effect][order(link[3,effect],
+                                                  link[1,effect])]
   cluster_table <- permuco:::cluster_table(multiple_comparison)
 
   attr(cluster_table, "type") <- paste("Permutation test using ",

@@ -14,7 +14,7 @@ Sys.setenv(LANG = "en")
 
 
 dir=  "../../article/quasif/article_quasif/2017_09_15_cluster_quasif"
-
+dir="../../../Dropbox/Uni/article/quasif/article_quasif/2017_09_15_cluster_quasif"
 
 lf = list.files(paste(dir, "/function_data_signal/",sep=""))
 for(i in 1:length(lf)){
@@ -62,7 +62,7 @@ for(i in 1:length(lf)){
 
 np=2
 
-qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T)
+qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1,2,3))
 
 qf_p2 = permucoQuasiF::clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)))
 

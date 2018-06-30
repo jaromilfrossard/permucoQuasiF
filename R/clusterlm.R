@@ -10,6 +10,7 @@
 #' @param threshold similar to the \code{permuco} package.
 #' @param aggr_FUN similar to the \code{permuco} package.
 #' @param multcomp similar to the \code{permuco} package.
+#' @param effect a numeric specifying the effect to test. The value correspond to the "assign" attribute of the model.matrix argument of the fixed effect. The default is NULL tests all effects.
 #' @param ... Futher arguments, see details.
 #' @return A list containing : a table of the clusters, or a \code{multcomp} object for the other multiple comparison procedures. Use the \link{plot.clusterlm} method to have a quick overview of the results.
 #' @details
@@ -18,7 +19,7 @@
 #'@import Matrix
 #'@export
 clusterlm <- function(formula, data=NULL, np = 5000, method = NULL, test = "fisher", threshold = NULL, aggr_FUN = NULL,
-                      multcomp = "clustermass", ...){
+                      multcomp = "clustermass", effect = NULL,...){
 
   cl = match.call()
   if(is.null(data)){data <- model.frame(formula = formula)}
@@ -108,7 +109,7 @@ clusterlm <- function(formula, data=NULL, np = 5000, method = NULL, test = "fish
                                return_distribution = dotargs$return_distribution,
                                cl = cl, multcomp = multcomp, alpha = dotargs$alpha,
                                p_scale = dotargs$p_scale, coding_sum = dotargs$coding_sum, ndh = dotargs$ndh,
-                               new_method = dotargs$new_method)
+                               new_method = dotargs$new_method, effect = effect)
   }
 
   ###output

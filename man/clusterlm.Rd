@@ -6,7 +6,7 @@
 \usage{
 clusterlm(formula, data = NULL, np = 5000, method = NULL,
   test = "fisher", threshold = NULL, aggr_FUN = NULL,
-  multcomp = "clustermass", ...)
+  multcomp = "clustermass", effect = NULL, ...)
 }
 \arguments{
 \item{formula}{A formula object. The formula for the quasi-F statistic should be written using the notation
@@ -25,6 +25,8 @@ clusterlm(formula, data = NULL, np = 5000, method = NULL,
 \item{aggr_FUN}{similar to the \code{permuco} package.}
 
 \item{multcomp}{similar to the \code{permuco} package.}
+
+\item{effect}{a numeric specifying the effect to test. The value correspond to the "assign" attribute of the model.matrix argument of the fixed effect. The default is NULL tests all effects.}
 
 \item{...}{Futher arguments, see details.}
 }
