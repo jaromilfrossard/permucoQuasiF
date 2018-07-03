@@ -30,7 +30,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
   error_term1 <- attr(terms, "variables")[[1 + ind_error[1]]]
   error_term2 <- attr(terms, "variables")[[1 + ind_error[2]]]
 
-  formula_f <- update(formula, paste(". ~ .-", deparse(error_term1,
+  formula_f <- update.formula(formula, paste(". ~ .-", deparse(error_term1,
                                                        width.cutoff = 500L, backtick = TRUE),"-",deparse(error_term2,
                                                                                                          width.cutoff = 500L, backtick = TRUE) ))
   e_term1 <- deparse(error_term1[[2L]], width.cutoff = 500L,
@@ -53,8 +53,8 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
 
 
   ####withour reponse
-  formula_allfixed_design = delete.response(terms(update(formula_allfixed, ~.)))
-  formula_f_design = delete.response(terms(update(formula_f, ~.)))
+  formula_allfixed_design = delete.response(terms(update.formula(formula_allfixed, ~.)))
+  formula_f_design = delete.response(terms(update.formula(formula_f, ~.)))
 
 
 
@@ -115,7 +115,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
   name <- colnames(mm_f)
   permuco:::checkBalancedData(fixed_formula = formula_f_design, data = mf)
 
-  tf = delete.response(terms(update(formula_f, ~.)))
+  tf = delete.response(terms(update.formula(formula_f, ~.)))
 
 
   zm = Zmat(mm0 = mm0, mm = mm_f, link = link,mm_id1 = mm_id1, mm_id2 = mm_id2,
@@ -144,6 +144,8 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
 
   if(is.null(effect)){
     effect = 1:max(attr(mm_f, "assign"))
+  }else{
+    effect = sort(unique(effect))
   }
 
   for (i in effect) {

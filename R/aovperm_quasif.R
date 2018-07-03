@@ -1,6 +1,6 @@
-#' @importFrom  stats contrasts contrasts<- model.response delete.response model.matrix as.formula update
+#' @importFrom  stats contrasts contrasts<- model.response delete.response model.matrix as.formula
 #' @importFrom permuco Pmat
-aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotation, new_method = NULL) {
+aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotation, new_method = NULL,effect = NULL) {
   if (is.null(coding_sum)) {
     coding_sum = T
   }
@@ -29,7 +29,7 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
   error_term1 <- attr(terms, "variables")[[1 + ind_error[1]]]
   error_term2 <- attr(terms, "variables")[[1 + ind_error[2]]]
 
-  formula_f <- update(formula, paste(". ~ .-", deparse(error_term1,
+  formula_f <- update.formula(formula, paste(". ~ .-", deparse(error_term1,
                                                        width.cutoff = 500L, backtick = TRUE),"-",deparse(error_term2,
                                                                                                          width.cutoff = 500L, backtick = TRUE) ))
   e_term1 <- deparse(error_term1[[2L]], width.cutoff = 500L,
@@ -91,6 +91,8 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
 
 
   mf0 = mf
+
+
   for(i in 1:NCOL(mf0)){
     if(is.factor(mf0[,i])){
       contrasts(mf0[,i],how.many = length(levels(mf0[,i]))) = contrasts(mf0[,i],contrasts=F)
@@ -109,7 +111,7 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
   permuco:::checkBalancedData(fixed_formula = formula_f, data = cbind(y,
                                                                       mf))
 
-  tf = delete.response(terms(update(formula_f, ~.)))
+  tf = delete.response(terms(update.formula(formula_f, ~.)))
 
   zm = Zmat(mm0 = mm0, mm = mm_f, link = link,mm_id1 = mm_id1, mm_id2 = mm_id2,
             mm0_id1= mm0_id1, mm0_id2= mm0_id2, terms_f= tf)
@@ -132,13 +134,22 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
   #              P = P,mm0 = mm0, mm0_id1 = mm0_id1, mm0_id2 = mm0_id2,terms_f = tf)
   # ag <<- args
 
+  if(is.null(effect)){
+    effect = 1:max(attr(mm_f, "assign"))
+  }else{
+    effect = sort(unique(effect))
+  }
 
-  distribution <- sapply(1:max(attr(mm_f, "assign")), function(i) {
+
+  distribution <- sapply(effect, function(i) {
     args$i = i
     funP(args = args)
   })
+
   distribution = matrix(distribution,nrow=np)
-  colnames(distribution) = attr(attr(mf_f, "terms"), "term.labels")
+
+
+  colnames(distribution) = attr(attr(mf_f, "terms"), "term.labels")[effect]
   permuco:::check_distribution(distribution = distribution, digits = 10,
                                n_unique = 300)
   table = anova_table_quasif(args)
@@ -148,7 +159,9 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
     permuco:::compute_pvalue(distribution = d, laterality = "bilateral",
                              na.rm = T)
   })
-  table$"permutation P(>F)" = permutation_pvalue
+
+  table$"permutation P(>F)" = NA
+  table$"permutation P(>F)"[effect] = permutation_pvalue
 
   attr(table, "type") <- paste("Permutation test using", method,
                                "to handle noise variable and", np, "permutations.")

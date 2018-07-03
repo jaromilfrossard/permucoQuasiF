@@ -4,7 +4,8 @@
 \alias{aovperm}
 \title{Integration of the quasi-F statistics into the \code{aovperm} function from the \code{permuco} package.}
 \usage{
-aovperm(formula, data = NULL, np = 5000, method = NULL, ...)
+aovperm(formula, data = NULL, np = 5000, method = NULL, effect = NULL,
+  ...)
 }
 \arguments{
 \item{formula}{A formula object. The formula for the quasi-F statistic should be written using the notation
@@ -15,6 +16,8 @@ aovperm(formula, data = NULL, np = 5000, method = NULL, ...)
 \item{np}{similar to the \code{permuco} package. Default value is \code{5000}.}
 
 \item{method}{similar to the \code{permuco} package. The method is set to \code{"terBraak"} and \code{"terBraak_logp"} are available for the quasi-F statistic.}
+
+\item{effect}{a numeric specifying the effect to test. The value correspond to the "assign" attribute of the model.matrix argument of the fixed effect. The default is NULL tests all effects.}
 
 \item{...}{Futher arguments, see details.}
 }

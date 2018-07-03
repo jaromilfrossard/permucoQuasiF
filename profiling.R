@@ -14,7 +14,7 @@ Sys.setenv(LANG = "en")
 
 
 dir=  "../../article/quasif/article_quasif/2017_09_15_cluster_quasif"
-dir="../../../Dropbox/Uni/article/quasif/article_quasif/2017_09_15_cluster_quasif"
+#dir="../../../Dropbox/Uni/article/quasif/article_quasif/2017_09_15_cluster_quasif"
 
 lf = list.files(paste(dir, "/function_data_signal/",sep=""))
 for(i in 1:length(lf)){
@@ -29,7 +29,7 @@ for(i in 1:length(lf)){
 
 ni= 9#18 #
 ns = 10 #20
-t = 600
+t = 10
 na =list(A=2,B=3,C=2)
 #aggr_FUN = function(x){if(length(x)==0){return(-Inf)}else{sum(log(1-x))}}
 aggr_FUN = sum
@@ -46,7 +46,7 @@ source(paste(dir, "/data_fix_signal_quasif.R",sep=""))
 err = rand_n(zl = zl,corl = corl,sl = sl)
 y = x%*%beta+err
 
-
+df$y=y[,1]
 fqf = y~A*B*C + Error(id/(B*C))+ Error(item/(A*C))
 
 
@@ -60,7 +60,12 @@ for(i in 1:length(lf)){
 }
 
 
-np=2
+np=4000
+
+qf_p = aovperm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,effect=c(3,2))
+qf_p = aovperm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,effect=c(2,3))
+
+qf_p$distribution
 
 qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1,2,3))
 

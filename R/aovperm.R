@@ -6,6 +6,7 @@
 #' @param data similar to the \code{permuco} package.
 #' @param np similar to the \code{permuco} package. Default value is \code{5000}.
 #' @param method similar to the \code{permuco} package. The method is set to \code{"terBraak"} and \code{"terBraak_logp"} are available for the quasi-F statistic.
+#' @param effect a numeric specifying the effect to test. The value correspond to the "assign" attribute of the model.matrix argument of the fixed effect. The default is NULL tests all effects.
 #' @param ... Futher arguments, see details.
 #'
 #' @return A \code{lmperm} object containing most of the objects given in an \link{lm} object, an ANOVA table with parametric and permutation p-values, the test statistics and the permutation distributions.
@@ -15,7 +16,7 @@
 #' @author jaromil.frossard@unige.ch
 #' @importFrom stats terms contr.sum model.frame terms
 #' @export
-aovperm<-function(formula, data=NULL, np = 5000, method = NULL,...){
+aovperm<-function(formula, data=NULL, np = 5000, method = NULL,effect = NULL,...){
   #method <- pmatch(method)
 
   if(is.null(data)){data <- model.frame(formula = formula)}
@@ -39,7 +40,7 @@ aovperm<-function(formula, data=NULL, np = 5000, method = NULL,...){
                            rnd_rotation = dotargs$rnd_rotation, new_method = dotargs$new_method)
     }else if (!is.null(indError)&(length(indError)==2)){
       result <- aovperm_quasif(formula = formula, data = data, method = method, np = np, coding_sum = dotargs$coding_sum,  P = dotargs$P, S = dotargs$S,
-                               rnd_rotation = dotargs$rnd_rotation, new_method = dotargs$new_method)
+                               rnd_rotation = dotargs$rnd_rotation, new_method = dotargs$new_method, effect = effect)
 }
 
   ###output
