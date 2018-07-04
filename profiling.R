@@ -27,8 +27,8 @@ for(i in 1:length(lf)){
 
 
 
-ni= 9#18 #
-ns = 10 #20
+ni= 18#18 #
+ns = 20 #20
 t = 10
 na =list(A=2,B=3,C=2)
 #aggr_FUN = function(x){if(length(x)==0){return(-Inf)}else{sum(log(1-x))}}
@@ -39,14 +39,12 @@ np = 4000
 fseed = 42000
 
 
-
-
 set.seed(fseed)
 source(paste(dir, "/data_fix_signal_quasif.R",sep=""))
 err = rand_n(zl = zl,corl = corl,sl = sl)
 y = x%*%beta+err
 
-df$y=y[,1]
+#df$y=y[,1]
 fqf = y~A*B*C + Error(id/(B*C))+ Error(item/(A*C))
 
 
@@ -60,14 +58,45 @@ for(i in 1:length(lf)){
 }
 
 
-np=4000
+np=400
+
+
+profvis({
+  qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1))})
+
+
+
+Rprof(tf <- "rprof.log", memory.profiling=TRUE,interval = 0.002)
+
+qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1))
+
+Rprof(NULL)
+summaryRprof(tf)
+
+
+
+
+profvis({
+  qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1))})
+
+
+
+qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=1)
+
+
+
+
+
+
+
+
 
 qf_p = aovperm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,effect=c(3,2))
 qf_p = aovperm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,effect=c(2,3))
 
 qf_p$distribution
 
-qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1,2,3))
+
 
 qf_p2 = permucoQuasiF::clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)))
 
@@ -102,7 +131,7 @@ dim(z12)
 dim(z12bis)
 
 
-np=2
+np=4000
 profvis({
 qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)))
 })

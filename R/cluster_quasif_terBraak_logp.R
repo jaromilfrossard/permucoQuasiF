@@ -39,10 +39,7 @@ cluster_quasif_terBraak_logp = function(args){
 
 
 
-
   qf = t(apply(as.matrix(args$S),2,function(pii){
-
-
     pyi <- args$zm$z0%*%(args$gamma*pii)+hdy
     num1 = Matrix::colSums(Matrix::qr.fitted(qr_xM, pyi)^2)/rank_x
     num2 = Matrix::colSums(Matrix::qr.fitted(qr_z12M, pyi)^2)/rank_z12
@@ -51,6 +48,9 @@ cluster_quasif_terBraak_logp = function(args){
     dfn = (num1+num2)^2/(num1^2/rank_x +num2^2/rank_z12)
     dfd = (den1+den2)^2/(den1^2/rank_z1+den2^2/rank_z2)
     abs(pf(q = as.numeric(c((num1+num2)/(den1+den2))),dfn,dfd,log.p = T,lower.tail = F))
+    # out = abs(pf(q = as.numeric(c((num1+num2)/(den1+den2))),dfn,dfd,log.p = T,lower.tail = F))
+    # rm(num1,num2,den1,den2)
+    # out
   }))
 
 
