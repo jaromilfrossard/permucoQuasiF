@@ -12,6 +12,12 @@ library(profvis)
 Sys.setenv(LANG = "en")
 
 
+load("data/data_18i_20s.RData")
+signal= data_signal$y
+design= data_signal$design
+
+save(signal,file="signal_18i_20s.rda")
+save(design,file="design_18i_20s.rda")
 
 dir=  "../../article/quasif/article_quasif/2017_09_15_cluster_quasif"
 #dir="../../../Dropbox/Uni/article/quasif/article_quasif/2017_09_15_cluster_quasif"

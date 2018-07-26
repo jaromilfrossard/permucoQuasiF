@@ -37,8 +37,15 @@ mm_z = function(model_frame, formula_f, formula_within, formula_id){
   # c = as.matrix(bdiag(lapply(z,function(zi)attr(zi,"contrasts"))))
   # z = do.call("cbind",z)
   # attr(z,"contrasts") = c
-  z = lapply(1:NCOL(mm0_b),function(i){
-    which_row = which(mm0_b[,i] == 1)
+
+  mm0_b<<-mm0_b
+  sq_i = seq_len(dim(mm0_b)[2])
+  if(length(sq_i)==0){sq_i=0}
+
+
+  z = lapply(sq_i,function(i){
+    if(i==0){which_row = 1:nrow(mm0_b)}else{which_row = which(mm0_b[,i] == 1)}
+
     which_col = which(colSums(mm0_id[which_row,])!=0)
 
     z0i = mm0_id[which_row,which_col]%*%contr.sum(length(which_col))
