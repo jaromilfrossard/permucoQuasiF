@@ -9,11 +9,19 @@ library(abind)
 library(permuco)
 library(permucoQuasiF)
 
-data("signal_18i_20s")
-data("design_18i_20s")
+data("signal")
+data("design")
 
 
-design_18i_20s
+
+# lf = list.files("R")
+# for(i in 1:length(lf)){
+#   source(paste("R/", lf,sep="")[i])
+# }
+
+
+modelQuasif <- clusterlm(signal ~A*B*C + Error(id/(B*C))+ Error(item/(A*C)),design,method = "terBraak_logp")
+
 
 library(profvis)
 Sys.setenv(LANG = "en")
