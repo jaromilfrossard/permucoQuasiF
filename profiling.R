@@ -14,13 +14,13 @@ data("design")
 
 
 
-# lf = list.files("R")
-# for(i in 1:length(lf)){
-#   source(paste("R/", lf,sep="")[i])
-# }
+lf = list.files("R")
+for(i in 1:length(lf)){
+  source(paste("R/", lf,sep="")[i])
+}
 
 
-modelQuasif <- clusterlm(signal ~A*B*C + Error(id/(B*C))+ Error(item/(A*C)),design,method = "terBraak_logp")
+modelQuasif <- clusterlm(signal ~A*B*C + Error(id/(B*C))+ Error(item/(A*C)),data = design,np=3)
 
 
 library(profvis)

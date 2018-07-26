@@ -2,7 +2,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
                              P, S, rnd_rotation, aggr_FUN, E, H, cl, multcomp, alpha, p_scale,
                              return_distribution, ndh, coding_sum, new_method, effect) {
   if (is.null(method)) {
-    method = "terBraak"
+    method = "terBraak_logp"
   }
 
   if (is.null(aggr_FUN)) {
@@ -10,7 +10,14 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
     aggr_FUN = function(x) sum(x)
     } else {
     fun_name = "a user-defined function"
+    }
+
+  if(is.null(threshold)){
+    threshold= switch(method,
+           "terBraak_logp" = abs(log(0.05)),
+           4)
   }
+
 
 
   switch(method,
@@ -148,6 +155,10 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
     effect = sort(unique(effect))
   }
 
+
+  if(length(threshold)==1){
+    threshold = rep(threshold,length(effect))}
+
   for (i in effect) {
     args$i = i
     distribution = funP(args = args)
@@ -161,7 +172,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
 
     multiple_comparison[[i]] = c(multiple_comparison[[i]],
                                  permuco:::switch_multcomp(multcomp = c("clustermass",multcomp),
-                                                           distribution = distribution, threshold = threshold,
+                                                           distribution = distribution, threshold = threshold[i],
                                                            aggr_FUN = aggr_FUN, laterality = "bilateral",
                                                            E = E, H = H, ndh = ndh, pvalue = pvalue, alpha = alpha))
   }
