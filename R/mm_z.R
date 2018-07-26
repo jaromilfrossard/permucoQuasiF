@@ -17,7 +17,7 @@ mm_z = function(model_frame, formula_f, formula_within, formula_id){
   term.labels_between =  (attr(tf,"term.labels")[attr(tf,"order")==1])[
     !(attr(tf,"term.labels")[attr(tf,"order")==1])%in%(attr(tw,"term.labels")[attr(tw,"order")==1])]
 
-  formula_between = formula(paste("~ 0 + ",paste(term.labels_between, collapse = ":"),collapse = ""))
+  formula_between = formula(paste("~ 0",paste(term.labels_between, collapse = ":"),collapse = "+"))
   formula_id = update.formula(old = formula_id,new = ~ 0 + .)
 
   mm0_id = model.matrix(formula_id,model_frame)
