@@ -18,6 +18,12 @@
 #'@author jaromil.frossard@unige.ch
 #'@import Matrix
 #'@export
+#'
+#' @example
+#'
+#' ## NOT RUN
+#'
+#'
 clusterlm <- function(formula, data=NULL, np = 5000, method = NULL, test = "fisher", threshold = NULL, aggr_FUN = NULL,
                       multcomp = "clustermass", effect = NULL,...){
 

@@ -7,14 +7,22 @@ library(abind)
 #install_github("jaromilfrossard/permuco")
 #install_github("jaromilfrossard/permucoQuasiF")
 library(permuco)
-#library(permucoQuasiF)
+library(permucoQuasiF)
+
+data("signal_18i_20s")
+data("design_18i_20s")
+
+
+design_18i_20s
+
 library(profvis)
 Sys.setenv(LANG = "en")
 
 
-load("data/data_18i_20s.RData")
-signal= data_signal$y
-design= data_signal$design
+library()
+
+
+
 
 save(signal,file="signal_18i_20s.rda")
 save(design,file="design_18i_20s.rda")

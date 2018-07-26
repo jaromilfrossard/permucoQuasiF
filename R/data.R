@@ -10,9 +10,9 @@
 #' \item B : withen subjects and items factor with 2 levels.
 #' }
 #'
-#' @name design_18i_20s
+#' @name design
 #' @docType data
-#' @usage data(design_18i_20s)
+#' @usage data(design)
 #' @format A data frame with 720 rows and 5 variables.
 NULL
 
@@ -23,8 +23,8 @@ NULL
 #'
 #' @description Simulated dataset of the signal of an experiment with 18 items and 20 subject. We assume 600 measures of the signal.
 #'
-#' @name signal_18i_20s
+#' @name signal
 #' @docType data
-#' @usage data(signal_18i_20s)
+#' @usage data(signal)
 #' @format A matrix with 720 rows and 600 variables.
 NULL
