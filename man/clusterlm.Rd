@@ -39,6 +39,26 @@ Provides cluster-mass tests based on permutations for quasi-F statistics
 \details{
 Similar to the \code{permuco} package.
 }
+\examples{
+
+ \dontrun{
+
+# packages
+
+library(permuco)
+devtools::install_github("jaromilfrossard/permucoQuasiF")
+library(permucoQuasiF)
+
+# data
+
+data("signal")
+data("design")
+
+model <- clusterlm( signal ~ A*B*C + Error(id/(B*C)) + Error(item/(A*C)), data=design, np = 5)
+plot(model)
+model}
+
+}
 \author{
 jaromil.frossard@unige.ch
 }

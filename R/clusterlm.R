@@ -19,10 +19,24 @@
 #'@import Matrix
 #'@export
 #'
-#' @example
+#' @examples
 #'
-#' ## NOT RUN
+#'  \dontrun{
 #'
+#' # packages
+#'
+#' library(permuco)
+#' devtools::install_github("jaromilfrossard/permucoQuasiF")
+#' library(permucoQuasiF)
+#'
+#' # data
+#'
+#' data("signal")
+#' data("design")
+#'
+#' model <- clusterlm( signal ~ A*B*C + Error(id/(B*C)) + Error(item/(A*C)), data=design, np = 5)
+#' plot(model)
+#' model}
 #'
 clusterlm <- function(formula, data=NULL, np = 5000, method = NULL, test = "fisher", threshold = NULL, aggr_FUN = NULL,
                       multcomp = "clustermass", effect = NULL,...){
