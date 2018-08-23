@@ -32,8 +32,8 @@ library()
 
 
 
-save(signal,file="signal_18i_20s.rda")
-save(design,file="design_18i_20s.rda")
+# save(signal,file="signal_18i_20s.rda")
+# save(design,file="design_18i_20s.rda")
 
 dir=  "../../article/quasif/article_quasif/2017_09_15_cluster_quasif"
 #dir="../../../Dropbox/Uni/article/quasif/article_quasif/2017_09_15_cluster_quasif"
@@ -81,6 +81,10 @@ for(i in 1:length(lf)){
 
 
 np=400
+
+
+qf_p = clusterlm(fqf,df,np=np,method = "terBraak_logp",aggr_FUN = aggr_FUN,threshold = abs(log(1-0.95)),return_distribution=T,effect=c(1))
+
 
 
 profvis({
