@@ -124,9 +124,8 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
 
   pry = as.numeric(zm$coding%*%(qr.coef(zm$qr_xz,y)[-c(1:ncol(mm_f))]))*S
   pry = zm$z0%*%Matrix(as.matrix(pry))
-  args <- list(y = y, mm = mm_f, mm_id1 = mm_id1, mm_id2 = mm_id2, link = link,
-               S = S, zm = zm, pry = pry)
-  #arg<<-args
+  args <- list(y = y, mm = mm_f, mm_id1 = mm_id1, mm_id2 = mm_id2,
+               link = link, S = S, zm = zm, pry = pry)
 
 
 
@@ -152,6 +151,7 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
   colnames(distribution) = attr(attr(mf_f, "terms"), "term.labels")[effect]
   permuco:::check_distribution(distribution = distribution, digits = 10,
                                n_unique = 300)
+
   table = anova_table_quasif(args)
 
   rownames(table) = attr(attr(mf_f, "terms"), "term.labels")

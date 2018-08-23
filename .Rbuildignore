@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^profiling\.R$
+^function_data$
+^test\.R$
+^data_uni_lmm\.R$
