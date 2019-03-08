@@ -173,7 +173,7 @@ clusterlm_quasif = function (formula, data, method, test, threshold, np,
     multiple_comparison[[i]] = c(multiple_comparison[[i]],
                                  permuco:::switch_multcomp(multcomp = c("clustermass",multcomp),
                                                            distribution = distribution, threshold = threshold[i],
-                                                           aggr_FUN = aggr_FUN, laterality = "bilateral",
+                                                           aggr_FUN = aggr_FUN, alternative = "two.sided",
                                                            E = E, H = H, ndh = ndh, pvalue = pvalue, alpha = alpha))
   }
 

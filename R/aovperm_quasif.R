@@ -156,7 +156,7 @@ aovperm_quasif = function(formula, data, method, np, P, S, coding_sum, rnd_rotat
 
   rownames(table) = attr(attr(mf_f, "terms"), "term.labels")
   permutation_pvalue = apply(distribution, 2, function(d) {
-    permuco:::compute_pvalue(distribution = d, laterality = "bilateral",
+    permuco:::compute_pvalue(distribution = d, alternative = "two.sided",
                              na.rm = T)
   })
 

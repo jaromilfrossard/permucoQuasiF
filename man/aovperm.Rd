@@ -4,8 +4,8 @@
 \alias{aovperm}
 \title{Integration of the quasi-F statistics into the \code{aovperm} function from the \code{permuco} package.}
 \usage{
-aovperm(formula, data = NULL, np = 5000, method = NULL, effect = NULL,
-  ...)
+aovperm(formula, data = NULL, np = 5000, method = NULL,
+  effect = NULL, ...)
 }
 \arguments{
 \item{formula}{A formula object. The formula for the quasi-F statistic should be written using the notation
